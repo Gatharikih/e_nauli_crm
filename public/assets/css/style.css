@@ -1263,12 +1263,12 @@ h6 {
   color: #012970;
 }
 
-.nav-clicked {
-  color: #4154f1 !important;
-  background: #f6f9ff !important;
-}
-
 .nav-link {
   color: #012970 !important;
   background: #fff !important;
+}
+
+.nav-clicked {
+  color: #4154f1 !important;
+  background: #f6f9ff !important;
 }
