@@ -184,7 +184,14 @@ let contentFleetMgt = document.getElementById('content-fleet-mgt');
 let dropdownProfile = document.getElementById('dropdown-profile');
 let dropdownAccountSettings = document.getElementById('dropdown-account-settings');
 let dropdownHelp = document.getElementById('dropdown-help');
-let dropdownSignout= document.getElementById('dropdown-signout');
+let dropdownSignout = document.getElementById('dropdown-signout');
+
+let contentSaccoDiv = document.getElementById('sacco-content-div');
+let saccoDiv = document.getElementById('sacco-div');
+let contentOfficialDiv = document.getElementById('official-content-div');
+let officialDiv = document.getElementById('official-div');
+let contentStationDiv = document.getElementById('station-content-div');
+let stationDiv = document.getElementById('station-div');
 
 window.onload = () => {
   navClick(navDashboard);
@@ -235,14 +242,26 @@ navFleetMgt.addEventListener('click', () => {
 
 cardSacco.addEventListener('click', () => {
   saccoMenuClick('Sacco');
+
+  contentSaccoDiv.classList.remove('d-none');
+  contentOfficialDiv.classList.add('d-none');
+  contentStationDiv.classList.add('d-none');
 });
 
 cardOfficial.addEventListener('click', () => {
   saccoMenuClick('Official');
+
+  contentSaccoDiv.classList.add('d-none');
+  contentOfficialDiv.classList.remove('d-none');
+  contentStationDiv.classList.add('d-none');
 });
 
 cardStation.addEventListener('click', () => {
   saccoMenuClick('Station');
+
+  contentSaccoDiv.classList.add('d-none');
+  contentOfficialDiv.classList.add('d-none');
+  contentStationDiv.classList.remove('d-none');
 });
 
 /* END SACCO MENU */

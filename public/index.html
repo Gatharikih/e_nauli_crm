@@ -490,7 +490,23 @@
 
         <div id="content-sacco-mgt" class="row d-none">
           <div class="col-12">
-            <button type="button" class="btn btn-outline-primary float-end me-5" data-bs-toggle="modal" data-bs-target="#modal-add-official"><i class="bi bi-person-plus-fill me-1"></i> Add official</button>
+            <div id="sacco-content-div">
+              <button type="button" class="btn btn-outline-primary float-end me-5" data-bs-toggle="modal" data-bs-target="#modal-add-sacco"><i class="bi bi-plus-circle-dotted me-1"></i> Add sacco</button>
+
+              <div id="sacco-div"></div>
+            </div>
+
+            <div id="official-content-div" class="d-none">
+              <button type="button" class="btn btn-outline-primary float-end me-5" data-bs-toggle="modal" data-bs-target="#modal-add-official"><i class="bi bi-person-plus-fill me-1"></i> Add official</button>
+
+              <div id="official-div"></div>
+            </div>
+
+            <div id="station-content-div" class="d-none">
+              <button type="button" class="btn btn-outline-primary float-end me-5" data-bs-toggle="modal" data-bs-target="#modal-add-station"><i class="bi bi-symmetry-vertical me-1"></i> Add station</button>
+
+              <div id="station-div"></div>
+            </div>
           </div>
         </div>
       </section>
@@ -812,6 +828,44 @@
         </div>
       </section>
 
+      <!-- Add Station Modal -->
+      <div class="modal fade" id="modal-add-station" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Add station</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+          </div>
+        </div>
+      </div><!-- Add Station Modal-->
+
+      <!-- Add Sacco Modal -->
+      <div class="modal fade" id="modal-add-sacco" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Add sacco</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+          </div>
+        </div>
+      </div><!-- Add Sacco Modal-->
+
       <!-- Add Official Modal -->
       <div class="modal fade" id="modal-add-official" tabindex="-1">
         <div class="modal-dialog modal-lg">
@@ -841,9 +895,9 @@
             </div>
             <div class="modal-body">
               <div class="search-bar">
-                <form class="search-form d-flex align-items-center">
+                <form class="search-form d-flex align-items-center w-75">
                   <div class="input-group mb-3">
-                    <input type="text" name="query" placeholder="Search sacco" class="form-control" title="Enter search keyword">
+                    <input type="text" name="query" placeholder="Search sacco by name or id" class="form-control" title="Enter search keyword">
                     <button type="button" title="Search sacco" class="input-group-text"><i class="bi bi-search"></i></button>
                   </div>
                 </form>
