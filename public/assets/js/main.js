@@ -431,6 +431,23 @@ function createNewSacco(saccoName, saccoAddress, saccoPin, saccoContactPerson, s
   saccoTagline, saccoCode, saccoRegion, saccoPrimaryTerminus, saccoSecondaryTerminus, saccoMaxFare, saccoPlatformFee) {
   let controller = new AbortController();
 
+  let data = {
+    pin: saccoPin,
+    name: saccoName,
+    senderId: "123",
+    address: saccoAddress,
+    contactPerson: saccoContactPerson,
+    contactNumber: saccoContactPersonNumber,
+    postalAddress: saccoPostalAddress,
+    tagline: saccoTagline,
+    code: saccoCode,
+    region: saccoRegion,
+    primaryTerminus: saccoPrimaryTerminus,
+    secondaryTerminus: saccoSecondaryTerminus,
+    maximumFare: saccoMaxFare,
+    platformFee: saccoPlatformFee
+  }
+
   let newSaccoPromise = fetch(baseURL + '/sacco', {
     method: 'POST',
     headers: {
@@ -438,23 +455,10 @@ function createNewSacco(saccoName, saccoAddress, saccoPin, saccoContactPerson, s
       'Content-Type': 'application/json'
     },
     signal: controller.signal,
-    body: {
-      "pin": saccoPin,
-      "name": saccoName,
-      "senderId": "123",
-      "address": saccoAddress,
-      "contactPerson": saccoContactPerson,
-      "contactNumber": saccoContactPersonNumber,
-      "postalAddress": saccoPostalAddress,
-      "tagline": saccoTagline,
-      "code": saccoCode,
-      "region": saccoRegion,
-      "primaryTerminus": saccoPrimaryTerminus,
-      "secondaryTerminus": saccoSecondaryTerminus,
-      "maximumFare": saccoMaxFare,
-      "platformFee": saccoPlatformFee
-    }
+    body: JSON.stringify(data)
   });
+
+  console.log(data)
 
   let timeOutPr = timeOut(controller);
 
