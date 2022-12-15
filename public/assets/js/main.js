@@ -1,4 +1,4 @@
-(function() {
+(function () {
   "use strict";
 
   /**
@@ -35,7 +35,7 @@
    * Sidebar toggle
    */
   if (select('.toggle-sidebar-btn')) {
-    on('click', '.toggle-sidebar-btn', function(e) {
+    on('click', '.toggle-sidebar-btn', function (e) {
       select('body').classList.toggle('toggle-sidebar')
     })
   }
@@ -44,7 +44,7 @@
    * Search bar toggle
    */
   if (select('.search-bar-toggle')) {
-    on('click', '.search-bar-toggle', function(e) {
+    on('click', '.search-bar-toggle', function (e) {
       select('.search-bar').classList.toggle('search-bar-show')
     })
   }
@@ -115,8 +115,8 @@
   var needsValidation = document.querySelectorAll('.needs-validation')
 
   Array.prototype.slice.call(needsValidation)
-    .forEach(function(form) {
-      form.addEventListener('submit', function(event) {
+    .forEach(function (form) {
+      form.addEventListener('submit', function (event) {
         if (!form.checkValidity()) {
           event.preventDefault()
           event.stopPropagation()
@@ -140,7 +140,7 @@
   const mainContainer = select('#main');
   if (mainContainer) {
     setTimeout(() => {
-      new ResizeObserver(function() {
+      new ResizeObserver(function () {
         select('.echart', true).forEach(getEchart => {
           echarts.getInstanceByDom(getEchart).resize();
         })
@@ -200,6 +200,23 @@ let pwdInput = document.getElementById('pwd-input');
 let loginPage = document.getElementById('login-page');
 let adminDashboard = document.getElementById('admin-dashboard');
 
+let saccoNameInput = document.getElementById('sacco-name-input');
+let saccoAddressInput = document.getElementById('sacco-address-input');
+let saccoPinInput = document.getElementById('sacco-pin-input');
+let saccoContactPersonInput = document.getElementById('sacco-contact-person-input');
+let saccoContactPersonNumberInput = document.getElementById('sacco-contact-number-input');
+let saccoPostalAddressInput = document.getElementById('sacco-postal-address-input');
+let saccoTaglineInput = document.getElementById('sacco-tagline-input');
+let saccoCodeInput = document.getElementById('sacco-code-input');
+let saccoRegionInput = document.getElementById('sacco-region-input');
+let saccoPrimaryTerminusInput = document.getElementById('sacco-pri-terminus-input');
+let saccoSecondaryTerminusInput = document.getElementById('sacco-sec-terminus-input');
+let saccoMaxFareInput = document.getElementById('sacco-max-fare-input');
+let saccoPlatformFeeInput = document.getElementById('sacco-platform-fee-input');
+
+let createSaccoBtn = document.getElementById('create-sacco-btn');
+let formAddSacco = document.getElementById('form-add-sacco');
+
 let baseURL = 'http://localhost:9000';
 
 window.onload = () => {
@@ -212,6 +229,29 @@ loginBtn.addEventListener('click', () => {
 
   if (phoneNum != '' && pwd != '') {
     loginWithPhoneAndPwd(phoneNum, pwd);
+  }
+});
+
+createSaccoBtn.addEventListener('click', () => {
+  let saccoName = saccoNameInput.value.trim();
+  let saccoAddress = saccoAddressInput.value.trim();
+  let saccoPin = saccoPinInput.value.trim();
+  let saccoContactPerson = saccoContactPersonInput.value.trim();
+  let saccoContactPersonNumber = saccoContactPersonNumberInput.value.trim();
+  let saccoPostalAddress = saccoPostalAddressInput.value.trim();
+  let saccoTagline = saccoTaglineInput.value.trim();
+  let saccoCode = saccoCodeInput.value.trim();
+  let saccoRegion = saccoRegionInput.value.trim();
+  let saccoPrimaryTerminus = saccoPrimaryTerminusInput.value.trim();
+  let saccoSecondaryTerminus = saccoSecondaryTerminusInput.value.trim();
+  let saccoMaxFare = saccoMaxFareInput.value.trim();
+  let saccoPlatformFee = saccoPlatformFeeInput.value.trim();
+
+  if (saccoName != '' && saccoAddress != '' && saccoPin != '' && saccoContactPerson != '' &&
+    saccoContactPersonNumber != '' && saccoPostalAddress != '' && saccoTagline != '' && saccoCode != '' &&
+    saccoRegion != '' && saccoPrimaryTerminus != '' && saccoSecondaryTerminus != '' && saccoMaxFare != '' && saccoPlatformFee != '') {
+    createNewSacco(saccoName, saccoAddress, saccoPin, saccoContactPerson, saccoContactPersonNumber, saccoPostalAddress,
+      saccoTagline, saccoCode, saccoRegion, saccoPrimaryTerminus, saccoSecondaryTerminus, saccoMaxFare, saccoPlatformFee);
   }
 });
 
@@ -320,6 +360,53 @@ dropdownSignout.addEventListener('click', () => {
 
 /* END PROFILE DROPDOWN */
 
+function refreshFunc() {
+  let controller = new AbortController();
+  let storedLocalToken = localStorage.getItem('tkn');
+
+  if (storedLocalToken != null) {
+    // token not null, undefined or empty
+    let verifyLocalTokenPromise = fetch(baseURL + '/check_session', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + storedLocalToken
+      },
+      signal: controller.signal,
+      body: JSON.stringify({
+        token: storedLocalToken.trim()
+      })
+    });
+
+    let timeOutPr = timeOut(controller);
+
+    //  race(verifyTokenPromise, timeOutPr)
+    race(verifyLocalTokenPromise, timeOutPr).then(async result => {
+      if (result.status == 200 || result.status == 304) {
+        // user's local session valid
+        let response = await result.text();
+        console.log(response);
+
+        if (response == 'Valid') {
+          loginPage.classList.add('d-none');
+          adminDashboard.classList.remove('d-none');
+        } else {
+          // session invalid
+          signOutFunc();
+        }
+
+      } else {
+        signOutFunc();
+      }
+    }).catch(error => {
+      // DOMException: The user aborted a request
+      console.log(error);
+    });
+  } else {
+    signOutFunc();
+  }
+}
+
 function timeOut(contr) {
   // 15s timeout
   let timeoutPromise = new Promise((resolve, reject) => {
@@ -340,8 +427,61 @@ function race(fetchPromise, timeoutPromise) {
 }
 
 // sign in with uname/pwd
+function createNewSacco(saccoName, saccoAddress, saccoPin, saccoContactPerson, saccoContactPersonNumber, saccoPostalAddress,
+  saccoTagline, saccoCode, saccoRegion, saccoPrimaryTerminus, saccoSecondaryTerminus, saccoMaxFare, saccoPlatformFee) {
+  let controller = new AbortController();
+
+  let newSaccoPromise = fetch(baseURL + '/sacco', {
+    method: 'POST',
+    headers: {
+      'Authorization': 'Bearer ' + localStorage.getItem('tkn'),
+      'Content-Type': 'application/json'
+    },
+    signal: controller.signal,
+    body: {
+      "pin": saccoPin,
+      "name": saccoName,
+      "senderId": "123",
+      "address": saccoAddress,
+      "contactPerson": saccoContactPerson,
+      "contactNumber": saccoContactPersonNumber,
+      "postalAddress": saccoPostalAddress,
+      "tagline": saccoTagline,
+      "code": saccoCode,
+      "region": saccoRegion,
+      "primaryTerminus": saccoPrimaryTerminus,
+      "secondaryTerminus": saccoSecondaryTerminus,
+      "maximumFare": saccoMaxFare,
+      "platformFee": saccoPlatformFee
+    }
+  });
+
+  let timeOutPr = timeOut(controller);
+
+  race(newSaccoPromise, timeOutPr).then(async result => {
+    console.log(result.status);
+
+    if (result.status == 200 || result.status == 201 || result.status == 304) {
+      // user accepted, save session
+      let sacco = await result.json();
+
+      console.log(sacco);
+      formAddSacco.reset();
+    } else if (result.status === 403 || result.status === 401) {
+      signOutFunc();
+    } else {
+      // displayAlert('Try and refresh your browser!');
+    }
+  }).catch(error => {
+    console.log(error);
+  }).finally(() => {
+    // hideLoader();
+  });
+}
+
+// sign in with phone/pin
 function loginWithPhoneAndPwd(phone, pwd) {
-  console.log( phone, pwd);
+  console.log(phone, pwd);
 
   let controller = new AbortController();
 
@@ -368,6 +508,8 @@ function loginWithPhoneAndPwd(phone, pwd) {
       let userDetails = await result.json();
 
       console.log(userDetails);
+
+      localStorage.setItem('tkn', userDetails.accessToken);
 
       loginPage.classList.add('d-none');
       adminDashboard.classList.remove('d-none');
