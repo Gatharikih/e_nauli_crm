@@ -35,13 +35,13 @@
 
 <body>
 
-  <div id="login-page" class="d-none">
-    <section class="section register min-vh-100 d-flex flex-column align-items-center justify-content-center py-4">
+  <div id="login-page">
+    <section class="section register min-vh-100 d-flex flex-column align-items-center justify-content-center pt-0 pb-4">
       <div class="container">
         <div class="row justify-content-center">
           <div class="col-lg-4 col-md-6 d-flex flex-column align-items-center justify-content-center">
 
-            <div class="d-flex justify-content-center py-4">
+            <div class="d-flex justify-content-center pt-0 pb-4">
               <span class="logo d-flex align-items-center w-auto pointer">
                 <img src="assets/img/logo.png" alt="">
                 <span class="d-none d-lg-block">e-Nauli</span>
@@ -54,28 +54,28 @@
 
                 <div class="pt-4 pb-2">
                   <h5 class="card-title text-center pb-0 fs-4">Login to Your Account</h5>
-                  <p class="text-center small">Enter your username & password to login</p>
+                  <p class="text-center small">Enter your phone number & password to login</p>
                 </div>
 
                 <form class="row g-3 needs-validation" novalidate>
 
                   <div class="col-12">
-                    <label for="yourUsername" class="form-label">Username</label>
+                    <label for="yourUsername" class="form-label">Phone number</label>
                     <div class="input-group has-validation">
-                      <span class="input-group-text" id="inputGroupPrepend">@</span>
-                      <input type="text" name="username" class="form-control" id="yourUsername" required>
-                      <div class="invalid-feedback">Please enter your username.</div>
+                      <span class="input-group-text" id="phoneInputGroupPrepend">254</span>
+                      <input type="tel" name="phone" class="form-control" id="phone-input" value="" required>
+                      <div class="invalid-feedback">Please enter your phone number.</div>
                     </div>
                   </div>
 
                   <div class="col-12">
-                    <label for="yourPassword" class="form-label">Password</label>
-                    <input type="password" name="password" class="form-control" id="yourPassword" required>
+                    <label for="pwd-input" class="form-label">Password</label>
+                    <input type="password" name="password" class="form-control" id="pwd-input" value="" required>
                     <div class="invalid-feedback">Please enter your password!</div>
                   </div>
 
                   <div class="col-12">
-                    <button class="btn btn-primary w-100" type="button">Login</button>
+                    <button id="login-btn" class="btn btn-primary w-100" type="button">Login</button>
                   </div>
                   <div class="col-12">
                     <p class="small mb-0">Forgot password? <span class="reset-pwd-link text-primary pointer">Reset password</span></p>
@@ -93,7 +93,7 @@
 
   </div>
 
-  <div id="admin-dashboard">
+  <div id="admin-dashboard" class="d-none">
     <!-- ======= Header ======= -->
     <header id="header" class="header fixed-top d-flex align-items-center">
 

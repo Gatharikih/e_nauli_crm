@@ -193,9 +193,27 @@ let officialDiv = document.getElementById('official-div');
 let contentStationDiv = document.getElementById('station-content-div');
 let stationDiv = document.getElementById('station-div');
 
+let loginBtn = document.getElementById('login-btn');
+let phoneInput = document.getElementById('phone-input');
+let pwdInput = document.getElementById('pwd-input');
+
+let loginPage = document.getElementById('login-page');
+let adminDashboard = document.getElementById('admin-dashboard');
+
+let baseURL = 'http://localhost:9000';
+
 window.onload = () => {
   navClick(navDashboard);
 }
+
+loginBtn.addEventListener('click', () => {
+  let phoneNum = phoneInput.value.trim();
+  let pwd = pwdInput.value.trim();
+
+  if (phoneNum != '' && pwd != '') {
+    loginWithPhoneAndPwd(phoneNum, pwd);
+  }
+});
 
 /* SIDE MENU */
 
@@ -297,10 +315,79 @@ dropdownHelp.addEventListener('click', () => {
 });
 
 dropdownSignout.addEventListener('click', () => {
-  displaySection(sectionProfile);
+  signOutFunc();
 });
 
 /* END PROFILE DROPDOWN */
+
+function timeOut(contr) {
+  // 15s timeout
+  let timeoutPromise = new Promise((resolve, reject) => {
+    let timeout = setTimeout(() => {
+      clearTimeout(timeout);
+      contr.abort();
+      resolve(555);
+    }, 15000);
+  });
+
+  return timeoutPromise;
+}
+
+function race(fetchPromise, timeoutPromise) {
+  let racePromise = Promise.race([fetchPromise, timeoutPromise]);
+
+  return racePromise;
+}
+
+// sign in with uname/pwd
+function loginWithPhoneAndPwd(phone, pwd) {
+  console.log( phone, pwd);
+
+  let controller = new AbortController();
+
+  let loginPromise = fetch(baseURL + '/user/login', {
+    method: 'POST',
+    headers: {
+      // 'Authorization': 'Bearer ' + localStorage.getItem('finder_Tkn'),
+      'Content-Type': 'application/json'
+    },
+    signal: controller.signal,
+    body: JSON.stringify({
+      phone: '254' + phone,
+      pwd: pwd
+    })
+  });
+
+  let timeOutPr = timeOut(controller);
+
+  race(loginPromise, timeOutPr).then(async result => {
+    console.log(result.status);
+
+    if (result.status == 200 || result.status == 304) {
+      // user accepted, save session
+      let userDetails = await result.json();
+
+      console.log(userDetails);
+
+      loginPage.classList.add('d-none');
+      adminDashboard.classList.remove('d-none');
+
+    } else if (result.status === 403 || result.status === 401) {
+      signOutFunc();
+    } else {
+      // displayAlert('Try and refresh your browser!');
+    }
+  }).catch(error => {
+    console.log(error);
+  }).finally(() => {
+    // hideLoader();
+  });
+}
+
+function signOutFunc() {
+  loginPage.classList.remove('d-none');
+  adminDashboard.classList.add('d-none');
+}
 
 function fleetMenuClick(crumb) {
   allBreadcrumbItems.forEach(eachBreadcrumb => {
@@ -346,4 +433,3 @@ function displaySection(section) {
 
   section.classList.remove('d-none');
 }
-
