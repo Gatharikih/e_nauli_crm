@@ -217,9 +217,19 @@ let saccoPlatformFeeInput = document.getElementById('sacco-platform-fee-input');
 let createSaccoBtn = document.getElementById('create-sacco-btn');
 let formAddSacco = document.getElementById('form-add-sacco');
 
+let preloader = document.querySelector('.main-loading');
+let loadingSpan = document.getElementById('loading-span');
+let toastBody = document.getElementById('toast-body');
+let alertDiv = document.getElementById('alert-div');
+
 let baseURL = 'http://localhost:9000';
 
 window.onload = () => {
+  setTimeout(() => {
+    hideLoader();
+    preloader.classList.remove('opacity-1');
+  }, 2000);
+
   navClick(navDashboard);
 }
 
@@ -360,6 +370,26 @@ dropdownSignout.addEventListener('click', () => {
 
 /* END PROFILE DROPDOWN */
 
+function displayAlert(msg) {
+  toastBody.innerHTML = msg;
+
+  let toast = new bootstrap.Toast(alertDiv)
+
+  toast.show()
+}
+
+function displayLoader(text = null) {
+  if (text) {
+    loadingSpan.innerHTML = text;
+  }
+
+  preloader.classList.add('active');
+}
+
+function hideLoader() {
+  preloader.classList.remove('active');
+}
+
 function refreshFunc() {
   let controller = new AbortController();
   let storedLocalToken = localStorage.getItem('tkn');
@@ -429,6 +459,8 @@ function race(fetchPromise, timeoutPromise) {
 // sign in with uname/pwd
 function createNewSacco(saccoName, saccoAddress, saccoPin, saccoContactPerson, saccoContactPersonNumber, saccoPostalAddress,
   saccoTagline, saccoCode, saccoRegion, saccoPrimaryTerminus, saccoSecondaryTerminus, saccoMaxFare, saccoPlatformFee) {
+  displayLoader('Processing...');
+
   let controller = new AbortController();
 
   let data = {
@@ -471,21 +503,26 @@ function createNewSacco(saccoName, saccoAddress, saccoPin, saccoContactPerson, s
 
       console.log(sacco);
       formAddSacco.reset();
+
+      displayAlert('Sacco added successfully');
     } else if (result.status === 403 || result.status === 401) {
       signOutFunc();
+
+      displayAlert('Please login.');
     } else {
-      // displayAlert('Try and refresh your browser!');
+      displayAlert('Try and refresh your browser!');
     }
   }).catch(error => {
     console.log(error);
+    displayAlert(error);
   }).finally(() => {
-    // hideLoader();
+    hideLoader();
   });
 }
 
 // sign in with phone/pin
 function loginWithPhoneAndPwd(phone, pwd) {
-  console.log(phone, pwd);
+  displayLoader('Signing in...');
 
   let controller = new AbortController();
 
@@ -517,16 +554,18 @@ function loginWithPhoneAndPwd(phone, pwd) {
 
       loginPage.classList.add('d-none');
       adminDashboard.classList.remove('d-none');
-
     } else if (result.status === 403 || result.status === 401) {
       signOutFunc();
+      displayAlert('Please login.');
     } else {
-      // displayAlert('Try and refresh your browser!');
+      displayAlert('Try and refresh your browser!');
     }
   }).catch(error => {
     console.log(error);
+
+    displayAlert(error);
   }).finally(() => {
-    // hideLoader();
+    hideLoader();
   });
 }
 

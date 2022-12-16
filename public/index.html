@@ -35,7 +35,22 @@
 
 <body>
 
-  <div id="login-page">
+  <!-- Page loading spinner-->
+  <div class="main-loading page-loading active opacity-1">
+    <div class="page-loading-inner">
+      <div class="page-spinner"></div><span id="loading-span">Loading...</span>
+    </div>
+  </div>
+
+  <div class="position-fixed top-0 end-0 p-3 mb-5 toast-container" style="z-index: 2011">
+    <div id="alert-div" class="toast bg-success px-2 py-1" role="alert" aria-live="assertive" aria-atomic="true">
+      <div class="d-flex">
+        <div id="toast-body" class="toast-body text-white"></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="login-page" class="d-none">
     <section class="section register min-vh-100 d-flex flex-column align-items-center justify-content-center pt-0 pb-4">
       <div class="container">
         <div class="row justify-content-center">
@@ -93,7 +108,7 @@
 
   </div>
 
-  <div id="admin-dashboard" class="d-none">
+  <div id="admin-dashboard" class="">
     <!-- ======= Header ======= -->
     <header id="header" class="header fixed-top d-flex align-items-center">
 
