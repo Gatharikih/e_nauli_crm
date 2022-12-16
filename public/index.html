@@ -937,18 +937,44 @@
 
       <!-- Add Official Modal -->
       <div class="modal fade" id="modal-add-official" tabindex="-1">
-        <div class="modal-dialog modal-lg">
+        <div class="modal-dialog modal-lg modal-dialog-scrollable">
           <div class="modal-content">
             <div class="modal-header">
               <h5 class="modal-title">Add official</h5>
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-
+               <form id="form-add-official" class="row g-3">
+                 <div class="col-md-6">
+                   <label for="official-sacco-id-input" class="form-label">Sacco ID</label>
+                   <input type="text" class="form-control" id="official-sacco-id-input">
+                 </div>
+                 <div class="col-md-12">
+                   <label for="official-sacco-msidn-input" class="form-label">MSIDN/Phone Number</label><br>
+                   <small class="text-muted">(Phone number should be in INTERNATIONAL format. e.g. 2547XXXXXX or 2541XXXXXX)</small>
+                   <input type="tel" class="form-control mt-2" id="official-sacco-msidn-input">
+                 </div>
+                  <div class="col-md-6">
+                    <label for="official-sacco-designation-input" class="form-label">Designation</label>
+                    <select id="official-sacco-designation-input" class="form-select">
+                      <option selected disabled>Choose...</option>
+                      <option value="Official">Official</option>
+                      <option value="Agent">Agent</option>
+                      <option value="Clerk">Clerk</option>
+                      <option value="Fuel">Fuel</option>
+                      <option value="StationManager">StationManager</option>
+                      <option value="ParcelAgent ">ParcelAgent </option>
+                    </select>
+                  </div>
+                  <div class="col-md-6">
+                    <label for="official-sacco-station-id-input" class="form-label">Sacco Station ID <small class="text-muted">(Optional)</small></label>
+                    <input type="tel" class="form-control mt-2" id="official-sacco-station-id-input">
+                  </div>
+               </form>
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-              <button type="button" class="btn btn-primary">Save changes</button>
+              <button id="create-official-btn" type="button" class="btn btn-primary">Save changes</button>
             </div>
           </div>
         </div>

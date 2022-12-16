@@ -164,6 +164,7 @@ let navFleetMgt = document.getElementById('nav-fleet-mgt');
 let allNavLinks = document.querySelectorAll('.nav-link');
 let allSections = document.querySelectorAll('.section');
 let allBreadcrumbItems = document.querySelectorAll('.breadcrumb-item');
+let allModals = document.querySelectorAll('.modal');
 
 let breadcrumbItem1 = document.getElementById('breadcrumb-item-1');
 let breadcrumbItem2 = document.getElementById('breadcrumb-item-2');
@@ -222,16 +223,35 @@ let loadingSpan = document.getElementById('loading-span');
 let toastBody = document.getElementById('toast-body');
 let alertDiv = document.getElementById('alert-div');
 
+let officialSaccoIdInput = document.getElementById('official-sacco-id-input');
+let officialSaccoMsidnInput = document.getElementById('official-sacco-msidn-input');
+let officialSaccoDesignationInput = document.getElementById('official-sacco-designation-input');
+let officialSaccoStationIdInput = document.getElementById('official-sacco-station-id-input');
+let createOfficialBtn = document.getElementById('create-official-btn');
+
+let modalAddOfficial = document.getElementById('modal-add-official');
+
 let baseURL = 'http://localhost:9000';
 
 window.onload = () => {
   setTimeout(() => {
     hideLoader();
     preloader.classList.remove('opacity-1');
-  }, 2000);
+  }, 1000);
 
   navClick(navDashboard);
 }
+
+createOfficialBtn.addEventListener('click', () => {
+  let officialSaccoId = officialSaccoIdInput.value.trim();
+  let officialSaccoMsidn = officialSaccoMsidnInput.value.trim();
+  let officialSaccoDesignation = officialSaccoDesignationInput.value.trim();
+  let officialSaccoStationId = officialSaccoStationIdInput.value.trim();
+
+  if (officialSaccoId != '' && officialSaccoMsidn != '' && officialSaccoDesignation != '') {
+    createOfficial(officialSaccoId, officialSaccoMsidn, officialSaccoDesignation, officialSaccoStationId);
+  }
+});
 
 loginBtn.addEventListener('click', () => {
   let phoneNum = phoneInput.value.trim();
@@ -563,6 +583,61 @@ function loginWithPhoneAndPwd(phone, pwd) {
   }).catch(error => {
     console.log(error);
 
+    displayAlert(error);
+  }).finally(() => {
+    hideLoader();
+  });
+}
+
+function createOfficial(officialSaccoId, officialSaccoMsidn, officialSaccoDesignation, officialSaccoStationId = null) {
+  displayLoader('Processing...');
+
+  let controller = new AbortController();
+
+  let data = {
+    saccoId: officialSaccoId,
+    msisdn: officialSaccoMsidn || '254721146559',
+    designation: officialSaccoDesignation || 'Official',
+    saccoStationId: officialSaccoStationId || ''
+  }
+
+  let newOfficialPromise = fetch(baseURL + '/sacco/official', {
+    method: 'POST',
+    headers: {
+      'Authorization': 'Bearer ' + localStorage.getItem('tkn'),
+      'Content-Type': 'application/json'
+    },
+    signal: controller.signal,
+    body: JSON.stringify(data)
+  });
+
+  console.log(data)
+
+  let timeOutPr = timeOut(controller);
+
+  race(newOfficialPromise, timeOutPr).then(async result => {
+    let response = await result.text();
+
+    console.log(response);
+
+    if (result.status == 200 || result.status == 201 || result.status == 304) {
+      formAddSacco.reset();
+
+      displayAlert('Sacco official added successfully');
+    } else if (result.status === 403 || result.status === 401) {
+      // signOutFunc();
+
+      allModals.forEach(eachModal => {
+        let modalToHide = document.querySelector(`#${eachModal.id}`);
+        bootstrap.Modal.getOrCreateInstance(modalToHide).hide();
+      });
+
+      displayAlert('Please login.');
+    } else {
+      displayAlert(response || 'Try and refresh your browser!');
+    }
+  }).catch(error => {
+    console.log(error);
     displayAlert(error);
   }).finally(() => {
     hideLoader();
