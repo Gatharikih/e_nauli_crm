@@ -217,6 +217,7 @@ let saccoPlatformFeeInput = document.getElementById('sacco-platform-fee-input');
 
 let createSaccoBtn = document.getElementById('create-sacco-btn');
 let formAddSacco = document.getElementById('form-add-sacco');
+let formAddOfficial = document.getElementById('form-add-official');
 
 let preloader = document.querySelector('.main-loading');
 let loadingSpan = document.getElementById('loading-span');
@@ -230,8 +231,12 @@ let officialSaccoStationIdInput = document.getElementById('official-sacco-statio
 let createOfficialBtn = document.getElementById('create-official-btn');
 
 let modalAddOfficial = document.getElementById('modal-add-official');
+let mainSearchInput = document.getElementById('main-search-input');
+let mainSearchBtn = document.getElementById('main-search-btn');
 
 let baseURL = 'http://localhost:9000';
+
+let contextFlag = 'dashboard';
 
 window.onload = () => {
   setTimeout(() => {
@@ -241,6 +246,24 @@ window.onload = () => {
 
   navClick(navDashboard);
 }
+
+mainSearchBtn.addEventListener('click', () => {
+  let searchTerm = mainSearchInput.value.trim();
+
+  if (searchTerm != '') {
+    switch (contextFlag) {
+      case 'dashboard':
+        break;
+      case 'sacco':
+        searchSacco(searchTerm)
+        break;
+      case 'fleet':
+        break;
+      default:
+        break;
+    }
+  }
+});
 
 createOfficialBtn.addEventListener('click', () => {
   let officialSaccoId = officialSaccoIdInput.value.trim();
@@ -288,6 +311,8 @@ createSaccoBtn.addEventListener('click', () => {
 /* SIDE MENU */
 
 navDashboard.addEventListener('click', () => {
+  contextFlag = 'dashboard';
+
   navClick(navDashboard);
   displaySection(sectionDashboard);
 
@@ -298,6 +323,8 @@ navDashboard.addEventListener('click', () => {
 });
 
 navSaccoMgt.addEventListener('click', () => {
+  contextFlag = 'sacco';
+
   navClick(navSaccoMgt);
   displaySection(sectionSaccoMgt);
 
@@ -311,6 +338,8 @@ navSaccoMgt.addEventListener('click', () => {
 });
 
 navFleetMgt.addEventListener('click', () => {
+  contextFlag = 'fleet';
+
   navClick(navFleetMgt);
   displaySection(sectionFleetMgt);
 
@@ -476,6 +505,45 @@ function race(fetchPromise, timeoutPromise) {
   return racePromise;
 }
 
+// search sacco
+function searchSacco(sacco_id) {
+  displayLoader('Searching...');
+
+  let controller = new AbortController();
+
+  let saccoPromise = fetch(baseURL + '/sacco/' + sacco_id, {
+    method: 'GET',
+    headers: {
+      'Authorization': 'Bearer ' + localStorage.getItem('tkn'),
+      'Content-Type': 'application/json'
+    },
+    signal: controller.signal
+  });
+
+  let timeOutPr = timeOut(controller);
+
+  race(saccoPromise, timeOutPr).then(async result => {
+    console.log(result.status);
+
+    let sacco = await result.json();
+
+    if (result.status == 200 || result.status == 201 || result.status == 304) {
+      console.log(sacco);
+    } else if (result.status === 403 || result.status === 401) {
+      signOutFunc();
+
+      displayAlert('Please login.');
+    } else {
+      displayAlert('Try and refresh your browser!');
+    }
+  }).catch(error => {
+    console.log(error);
+    displayAlert(error);
+  }).finally(() => {
+    hideLoader();
+  });
+}
+
 // sign in with uname/pwd
 function createNewSacco(saccoName, saccoAddress, saccoPin, saccoContactPerson, saccoContactPersonNumber, saccoPostalAddress,
   saccoTagline, saccoCode, saccoRegion, saccoPrimaryTerminus, saccoSecondaryTerminus, saccoMaxFare, saccoPlatformFee) {
@@ -621,16 +689,14 @@ function createOfficial(officialSaccoId, officialSaccoMsidn, officialSaccoDesign
     console.log(response);
 
     if (result.status == 200 || result.status == 201 || result.status == 304) {
-      formAddSacco.reset();
+      formAddOfficial.reset();
 
       displayAlert('Sacco official added successfully');
+      bootstrap.Modal.getOrCreateInstance(modalAddOfficial).hide();
     } else if (result.status === 403 || result.status === 401) {
       // signOutFunc();
 
-      allModals.forEach(eachModal => {
-        let modalToHide = document.querySelector(`#${eachModal.id}`);
-        bootstrap.Modal.getOrCreateInstance(modalToHide).hide();
-      });
+      bootstrap.Modal.getOrCreateInstance(modalAddOfficial).hide();
 
       displayAlert('Please login.');
     } else {

@@ -113,17 +113,17 @@
     <header id="header" class="header fixed-top d-flex align-items-center">
 
       <div class="d-flex align-items-center justify-content-between">
-        <a href="index.html" class="logo d-flex align-items-center">
+        <span class="logo d-flex align-items-center pointer">
           <img src="assets/img/logo.png" alt="">
           <span class="d-none d-lg-block">e-Nauli</span>
-        </a>
+        </span>
         <i class="bi bi-list toggle-sidebar-btn"></i>
       </div><!-- End Logo -->
 
       <div class="search-bar">
         <form class="search-form d-flex align-items-center">
-          <input type="text" name="query" placeholder="Search" title="Enter search keyword">
-          <button type="button" title="Search"><i class="bi bi-search"></i></button>
+          <input id="main-search-input" type="text" name="query" placeholder="Search" title="Enter search keyword">
+          <button id="main-search-btn" type="button" title="Search"><i class="bi bi-search"></i></button>
         </form>
       </div><!-- End Search Bar -->
 
@@ -506,9 +506,65 @@
         <div id="content-sacco-mgt" class="row d-none">
           <div class="col-12">
             <div id="sacco-content-div">
-              <button type="button" class="btn btn-outline-primary float-end me-5" data-bs-toggle="modal" data-bs-target="#modal-add-sacco"><i class="bi bi-plus-circle-dotted me-1"></i> Add sacco</button>
+              <div class="row my-3">
+                <div class="col-12">
+                  <button type="button" class="btn btn-outline-primary float-end me-5" data-bs-toggle="modal" data-bs-target="#modal-add-sacco"><i class="bi bi-plus-circle-dotted me-1"></i> Add sacco</button>
+                </div>
+              </div>
 
-              <div id="sacco-div"></div>
+              <div id="sacco-div" class="row mt-2 mb-3">
+                <!-- Single Sacco -->
+                <div class="col-12">
+                  <div class="card">
+                    <!-- 
+                    <div class="filter">
+                      <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+                      <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                        <li><a class="dropdown-item" href="#">Today</a></li>
+                        <li><a class="dropdown-item" href="#">This Month</a></li>
+                        <li><a class="dropdown-item" href="#">This Year</a></li>
+                      </ul>
+                    </div> -->
+
+                    <div class="card-body py-4">
+                      <!-- Table with hoverable rows -->
+                      <table class="table table-hover">
+                        <thead>
+                          <tr>
+                            <th>#</th>
+                            <th>Name</th>
+                            <th>Address</th>
+                            <th>Contact Person</th>
+                            <th>Sacco ID</th>
+                            <th></th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr class="pointer">
+                            <th>1</th>
+                            <td>KUKENA SACCO</td>
+                            <td>KUKENA@YAHOO.COM</td>
+                            <td>Janet Njambi Kibe</td>
+                            <td>347331613945757696</td>
+                            <td>
+                              <div class="filter position-relative top-0">
+                                <a class="icon p-0" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+                                <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                                  <li><a class="dropdown-item" href="#">Edit</a></li>
+                                  <li><a class="dropdown-item" href="#">Deactivate</a></li>
+                                  <li><a class="dropdown-item" href="#">This Year</a></li>
+                                </ul>
+                              </div>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                      <!-- End Table with hoverable rows -->
+                    </div>
+
+                  </div>
+                </div><!-- End Single Sacco -->
+              </div>
             </div>
 
             <div id="official-content-div" class="d-none">
@@ -944,33 +1000,33 @@
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-               <form id="form-add-official" class="row g-3">
-                 <div class="col-md-6">
-                   <label for="official-sacco-id-input" class="form-label">Sacco ID</label>
-                   <input type="text" class="form-control" id="official-sacco-id-input">
-                 </div>
-                 <div class="col-md-12">
-                   <label for="official-sacco-msidn-input" class="form-label">MSIDN/Phone Number</label><br>
-                   <small class="text-muted">(Phone number should be in INTERNATIONAL format. e.g. 2547XXXXXX or 2541XXXXXX)</small>
-                   <input type="tel" class="form-control mt-2" id="official-sacco-msidn-input">
-                 </div>
-                  <div class="col-md-6">
-                    <label for="official-sacco-designation-input" class="form-label">Designation</label>
-                    <select id="official-sacco-designation-input" class="form-select">
-                      <option selected disabled>Choose...</option>
-                      <option value="Official">Official</option>
-                      <option value="Agent">Agent</option>
-                      <option value="Clerk">Clerk</option>
-                      <option value="Fuel">Fuel</option>
-                      <option value="StationManager">StationManager</option>
-                      <option value="ParcelAgent ">ParcelAgent </option>
-                    </select>
-                  </div>
-                  <div class="col-md-6">
-                    <label for="official-sacco-station-id-input" class="form-label">Sacco Station ID <small class="text-muted">(Optional)</small></label>
-                    <input type="tel" class="form-control mt-2" id="official-sacco-station-id-input">
-                  </div>
-               </form>
+              <form id="form-add-official" class="row g-3">
+                <div class="col-md-6">
+                  <label for="official-sacco-id-input" class="form-label">Sacco ID</label>
+                  <input type="text" class="form-control" id="official-sacco-id-input">
+                </div>
+                <div class="col-md-12">
+                  <label for="official-sacco-msidn-input" class="form-label">MSIDN/Phone Number</label><br>
+                  <small class="text-muted">(Phone number should be in INTERNATIONAL format. e.g. 2547XXXXXX or 2541XXXXXX)</small>
+                  <input type="tel" class="form-control mt-2" id="official-sacco-msidn-input">
+                </div>
+                <div class="col-md-6">
+                  <label for="official-sacco-designation-input" class="form-label">Designation</label>
+                  <select id="official-sacco-designation-input" class="form-select">
+                    <option selected disabled>Choose...</option>
+                    <option value="Official">Official</option>
+                    <option value="Agent">Agent</option>
+                    <option value="Clerk">Clerk</option>
+                    <option value="Fuel">Fuel</option>
+                    <option value="StationManager">StationManager</option>
+                    <option value="ParcelAgent ">ParcelAgent </option>
+                  </select>
+                </div>
+                <div class="col-md-6">
+                  <label for="official-sacco-station-id-input" class="form-label">Sacco Station ID <small class="text-muted">(Optional)</small></label>
+                  <input type="tel" class="form-control mt-2" id="official-sacco-station-id-input">
+                </div>
+              </form>
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
