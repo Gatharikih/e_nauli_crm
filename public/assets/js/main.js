@@ -529,7 +529,7 @@ function searchSacco(sacco_id) {
 
     if (result.status == 200 || result.status == 201 || result.status == 304) {
       console.log(sacco);
-    } else if (result.status === 403 || result.status === 401) {
+    } else if (result.status == 403 || result.status == 401) {
       signOutFunc();
 
       displayAlert('Please login.');
@@ -593,7 +593,7 @@ function createNewSacco(saccoName, saccoAddress, saccoPin, saccoContactPerson, s
       formAddSacco.reset();
 
       displayAlert('Sacco added successfully');
-    } else if (result.status === 403 || result.status === 401) {
+    } else if (result.status == 403 || result.status == 401) {
       signOutFunc();
 
       displayAlert('Please login.');
@@ -642,9 +642,12 @@ function loginWithPhoneAndPwd(phone, pwd) {
 
       loginPage.classList.add('d-none');
       adminDashboard.classList.remove('d-none');
-    } else if (result.status === 403 || result.status === 401) {
+    } else if (result.status == 403 || result.status == 401) {
       signOutFunc();
       displayAlert('Please login.');
+    } else if (result.status == 500) {
+      signOutFunc();
+      displayAlert("We encountered a problem on our end. We're working to resolve it.");
     } else {
       displayAlert('Try and refresh your browser!');
     }
@@ -693,7 +696,7 @@ function createOfficial(officialSaccoId, officialSaccoMsidn, officialSaccoDesign
 
       displayAlert('Sacco official added successfully');
       bootstrap.Modal.getOrCreateInstance(modalAddOfficial).hide();
-    } else if (result.status === 403 || result.status === 401) {
+    } else if (result.status == 403 || result.status == 401) {
       // signOutFunc();
 
       bootstrap.Modal.getOrCreateInstance(modalAddOfficial).hide();
