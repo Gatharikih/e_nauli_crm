@@ -9,6 +9,10 @@
 # General
 --------------------------------------------------------------*/
 
+.events-none * {
+  pointer-events: none;
+}
+
 .loader.page-loading.active {
   opacity: 0.6 !important;
 }

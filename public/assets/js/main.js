@@ -512,8 +512,11 @@ function createSaccoTableRowEl(saccoData, index = 0) {
     saccoTbody.removeChild(saccoTbody.firstChild);
   }
 
-  let saccoEl = `<tr id="${saccoData.saccoId}" class="pointer">
-                            <th>${index + 1}</th>
+  let saccoTableRow = document.createElement('tr');
+  saccoTableRow.setAttribute('id', saccoData.saccoId);
+  saccoTableRow.setAttribute('class', 'pointer');
+
+  let saccoEl = `<th>${index + 1}</th>
                             <td>${saccoData.name}</td>
                             <td>${saccoData.address.toLowerCase()}</td>
                             <td>${saccoData.contactPerson}</td>
@@ -527,10 +530,16 @@ function createSaccoTableRowEl(saccoData, index = 0) {
                                   <li><span class="dropdown-item"><i class="bi bi-eye-fill me-1 align-middle"></i> View</span></li>
                                 </ul>
                               </div>
-                            </td>
-                          </tr>`;
+                            </td>`;
+  
 
-  saccoTbody.innerHTML = saccoEl;
+  saccoTableRow.addEventListener('click', ev => {
+    ev.stopPropagation();
+    console.log(ev.target.parentNode.id);
+  });
+
+  saccoTableRow.innerHTML = saccoEl;
+  saccoTbody.appendChild(saccoTableRow);
 }
 
 // search sacco
