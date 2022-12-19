@@ -50,7 +50,7 @@
     </div>
   </div>
 
-  <div id="login-page" class="">
+  <div id="login-page" class="d-none">
     <section class="section register min-vh-100 d-flex flex-column align-items-center justify-content-center pt-0 pb-4">
       <div class="container">
         <div class="row justify-content-center">
@@ -108,7 +108,7 @@
 
   </div>
 
-  <div id="admin-dashboard" class="d-none">
+  <div id="admin-dashboard" class="">
     <!-- ======= Header ======= -->
     <header id="header" class="header fixed-top d-flex align-items-center">
 
@@ -130,7 +130,8 @@
       <nav class="header-nav ms-auto">
         <ul class="d-flex align-items-center">
 
-          <li class="nav-item d-block d-lg-none">
+          <!--  d-lg-none -->
+          <li class="nav-item d-block d-md-block d-sm-block">
             <a class="nav-link nav-icon search-bar-toggle " href="#">
               <i class="bi bi-search"></i>
             </a>
@@ -509,6 +510,7 @@
               <div class="row my-3">
                 <div class="col-12">
                   <button type="button" class="btn btn-outline-primary float-end me-5" data-bs-toggle="modal" data-bs-target="#modal-add-sacco"><i class="bi bi-plus-circle-dotted me-1"></i> Add sacco</button>
+                  <button id="get-all-saccos-btn" type="button" class="btn btn-outline-primary float-end me-5 d-none"><i class="bi bi-list-nested me-1"></i> Get all saccos</button>
                 </div>
               </div>
 
@@ -516,18 +518,7 @@
                 <!-- Single Sacco -->
                 <div class="col-12">
                   <div class="card">
-                    <!-- 
-                    <div class="filter">
-                      <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
-                      <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                        <li><a class="dropdown-item" href="#">Today</a></li>
-                        <li><a class="dropdown-item" href="#">This Month</a></li>
-                        <li><a class="dropdown-item" href="#">This Year</a></li>
-                      </ul>
-                    </div> -->
-
                     <div class="card-body py-4">
-                      <!-- Table with hoverable rows -->
                       <table class="table table-hover">
                         <thead>
                           <tr>
@@ -539,27 +530,10 @@
                             <th></th>
                           </tr>
                         </thead>
-                        <tbody>
-                          <tr class="pointer">
-                            <th>1</th>
-                            <td>KUKENA SACCO</td>
-                            <td>KUKENA@YAHOO.COM</td>
-                            <td>Janet Njambi Kibe</td>
-                            <td>347331613945757696</td>
-                            <td>
-                              <div class="filter position-relative top-0">
-                                <a class="icon p-0" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
-                                <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                                  <li><a class="dropdown-item" href="#">Edit</a></li>
-                                  <li><a class="dropdown-item" href="#">Deactivate</a></li>
-                                  <li><a class="dropdown-item" href="#">This Year</a></li>
-                                </ul>
-                              </div>
-                            </td>
-                          </tr>
+                        <tbody id="sacco-tbody">
+                          
                         </tbody>
                       </table>
-                      <!-- End Table with hoverable rows -->
                     </div>
 
                   </div>

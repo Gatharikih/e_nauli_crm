@@ -234,6 +234,8 @@ let modalAddOfficial = document.getElementById('modal-add-official');
 let mainSearchInput = document.getElementById('main-search-input');
 let mainSearchBtn = document.getElementById('main-search-btn');
 
+let saccoTbody = document.getElementById('sacco-tbody');
+
 let baseURL = 'http://localhost:9000';
 
 let contextFlag = 'dashboard';
@@ -505,6 +507,32 @@ function race(fetchPromise, timeoutPromise) {
   return racePromise;
 }
 
+function createSaccoTableRowEl(saccoData, index = 0) {
+  while (saccoTbody.firstChild) {
+    saccoTbody.removeChild(saccoTbody.firstChild);
+  }
+
+  let saccoEl = `<tr id="${saccoData.saccoId}" class="pointer">
+                            <th>${index + 1}</th>
+                            <td>${saccoData.name}</td>
+                            <td>${saccoData.address.toLowerCase()}</td>
+                            <td>${saccoData.contactPerson}</td>
+                            <td>${saccoData.saccoId}</td>
+                            <td>
+                              <div class="filter position-relative top-0">
+                                <a class="icon p-0" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+                                <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                                  <li><span class="dropdown-item"><i class="bi bi-pencil-square me-1 align-middle"></i> Edit</span></li>
+                                  <li><span class="dropdown-item"><i class="bi bi-lightbulb-off me-1 align-middle"></i> Deactivate</span></li>
+                                  <li><span class="dropdown-item"><i class="bi bi-eye-fill me-1 align-middle"></i> View</span></li>
+                                </ul>
+                              </div>
+                            </td>
+                          </tr>`;
+
+  saccoTbody.innerHTML = saccoEl;
+}
+
 // search sacco
 function searchSacco(sacco_id) {
   displayLoader('Searching...');
@@ -525,10 +553,12 @@ function searchSacco(sacco_id) {
   race(saccoPromise, timeOutPr).then(async result => {
     console.log(result.status);
 
-    let sacco = await result.json();
+    let saccoData = await result.json();
 
     if (result.status == 200 || result.status == 201 || result.status == 304) {
-      console.log(sacco);
+      console.log(saccoData);
+
+      createSaccoTableRowEl(saccoData);
     } else if (result.status == 403 || result.status == 401) {
       signOutFunc();
 
