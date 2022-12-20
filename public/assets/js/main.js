@@ -257,7 +257,7 @@ mainSearchBtn.addEventListener('click', () => {
       case 'dashboard':
         break;
       case 'sacco':
-        searchSacco(searchTerm)
+        searchSacco(searchTerm, 0);
         break;
       case 'fleet':
         break;
@@ -525,25 +525,37 @@ function createSaccoTableRowEl(saccoData, index = 0) {
                               <div class="filter position-relative top-0">
                                 <a class="icon p-0" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
                                 <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                                  <li><span class="dropdown-item"><i class="bi bi-pencil-square me-1 align-middle"></i> Edit</span></li>
-                                  <li><span class="dropdown-item"><i class="bi bi-lightbulb-off me-1 align-middle"></i> Deactivate</span></li>
-                                  <li><span class="dropdown-item"><i class="bi bi-eye-fill me-1 align-middle"></i> View</span></li>
+                                  <li id="edit-${saccoData.saccoId}" class="events-none"><span class="dropdown-item"><i class="bi bi-pencil-square me-1 align-middle"></i> Edit</span></li>
+                                  <li id="deactivate-${saccoData.saccoId}" class="events-none"><span class="dropdown-item"><i class="bi bi-lightbulb-off me-1 align-middle"></i> Deactivate</span></li>
+                                  <li id="view-${saccoData.saccoId}" class="events-none"><span class="dropdown-item"><i class="bi bi-eye-fill me-1 align-middle"></i> View</span></li>
                                 </ul>
                               </div>
                             </td>`;
-  
-
-  saccoTableRow.addEventListener('click', ev => {
-    ev.stopPropagation();
-    console.log(ev.target.parentNode.id);
-  });
 
   saccoTableRow.innerHTML = saccoEl;
   saccoTbody.appendChild(saccoTableRow);
+
+  document.querySelector(`#edit-${saccoData.saccoId}`).addEventListener('click', ev => {
+    let saccoId = (ev.target.id).split('-')[1];
+
+    searchSacco(saccoId, 1);
+  });
+
+  document.querySelector(`#deactivate-${saccoData.saccoId}`).addEventListener('click', ev => {
+    let saccoId = (ev.target.id).split('-')[1];
+
+    searchSacco(saccoId, 1);
+  });
+
+  document.querySelector(`#view-${saccoData.saccoId}`).addEventListener('click', ev => {
+    let saccoId = (ev.target.id).split('-')[1];
+
+    searchSacco(saccoId, 1);
+  });
 }
 
 // search sacco
-function searchSacco(sacco_id) {
+function searchSacco(sacco_id, flag = 0) {
   displayLoader('Searching...');
 
   let controller = new AbortController();
@@ -552,7 +564,8 @@ function searchSacco(sacco_id) {
     method: 'GET',
     headers: {
       'Authorization': 'Bearer ' + localStorage.getItem('tkn'),
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      'X-Data-Flag': flag.toString()
     },
     signal: controller.signal
   });
@@ -567,7 +580,105 @@ function searchSacco(sacco_id) {
     if (result.status == 200 || result.status == 201 || result.status == 304) {
       console.log(saccoData);
 
-      createSaccoTableRowEl(saccoData);
+      if (flag == 0) {
+        createSaccoTableRowEl(saccoData);
+      } else {
+        // TODO:
+      }
+
+    } else if (result.status == 403 || result.status == 401) {
+      signOutFunc();
+
+      displayAlert('Please login.');
+    } else {
+      displayAlert('Try and refresh your browser!');
+    }
+  }).catch(error => {
+    console.log(error);
+    displayAlert(error);
+  }).finally(() => {
+    hideLoader();
+  });
+}
+
+// update sacco status
+function updateSaccoStatus(sacco_id, status) {
+  displayLoader('Updating...');
+
+  let controller = new AbortController();
+
+  let saccoPromise = fetch(baseURL + '/sacco/status', {
+    method: 'PUT',
+    headers: {
+      'Authorization': 'Bearer ' + localStorage.getItem('tkn'),
+      'Content-Type': 'application/json'
+    },
+    signal: controller.signal,
+    body: JSON.stringify({
+      id: sacco_id,
+      activate: status
+    })
+  });
+
+  let timeOutPr = timeOut(controller);
+
+  race(saccoPromise, timeOutPr).then(async result => {
+    console.log(result.status);
+
+    let saccoData = await result.json();
+
+    if (result.status == 200 || result.status == 201 || result.status == 304) {
+      console.log(saccoData);
+    } else if (result.status == 403 || result.status == 401) {
+      signOutFunc();
+
+      displayAlert('Please login.');
+    } else {
+      displayAlert('Try and refresh your browser!');
+    }
+  }).catch(error => {
+    console.log(error);
+    displayAlert(error);
+  }).finally(() => {
+    hideLoader();
+  });
+}
+
+// update sacco details
+function updateSaccoDetails(data) {
+  displayLoader('Updating...');
+
+  let controller = new AbortController();
+
+  let saccoPromise = fetch(baseURL + '/sacco', {
+    method: 'PUT',
+    headers: {
+      'Authorization': 'Bearer ' + localStorage.getItem('tkn'),
+      'Content-Type': 'application/json'
+    },
+    signal: controller.signal,
+    body: JSON.stringify({
+      saccoId: data.saccoId,
+      pin: data.pin,
+      senderId: data.senderId,
+      name: data.name,
+      address: data.address,
+      contactPerson: data.contactPerson,
+      contactNumber: data.contactNumber,
+      postalAddress: data.postalAddress,
+      tagline: data.tagline
+    })
+  });
+
+  let timeOutPr = timeOut(controller);
+
+  race(saccoPromise, timeOutPr).then(async result => {
+    console.log(result.status);
+
+    let saccoData = await result.json();
+
+    if (result.status == 200 || result.status == 201 || result.status == 304) {
+      console.log(saccoData);
     } else if (result.status == 403 || result.status == 401) {
       signOutFunc();
 
