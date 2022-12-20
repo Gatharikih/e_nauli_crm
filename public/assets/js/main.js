@@ -694,6 +694,137 @@ function updateSaccoDetails(data) {
   });
 }
 
+// add vehicle to sacco
+function addVehicleToSacco(data) {
+  displayLoader('Updating...');
+
+  let controller = new AbortController();
+
+  let vehiclePromise = fetch(baseURL + '/vehicle', {
+    method: 'POST',
+    headers: {
+      'Authorization': 'Bearer ' + localStorage.getItem('tkn'),
+      'Content-Type': 'application/json'
+    },
+    signal: controller.signal,
+    body: JSON.stringify({
+      plateNumber: data.plateNumber,
+      saccoId: data.saccoId,
+      seatingCapacity: data.seatingCapacity,
+      fleetNumber: data.fleetNumber
+    })
+  });
+
+  let timeOutPr = timeOut(controller);
+
+  race(vehiclePromise, timeOutPr).then(async result => {
+    console.log(result.status);
+
+    let vehicleData = await result.json();
+
+    if (result.status == 200 || result.status == 201 || result.status == 304) {
+      console.log(vehicleData);
+    } else if (result.status == 403 || result.status == 401) {
+      signOutFunc();
+
+      displayAlert('Please login.');
+    } else {
+      displayAlert('Try and refresh your browser!');
+    }
+  }).catch(error => {
+    console.log(error);
+    displayAlert(error);
+  }).finally(() => {
+    hideLoader();
+  });
+}
+
+// update vehicle to sacco
+function updateVehicleToSacco(data) {
+  displayLoader('Updating...');
+
+  let controller = new AbortController();
+
+  let updateVehiclePromise = fetch(baseURL + '/vehicle', {
+    method: 'PUT',
+    headers: {
+      'Authorization': 'Bearer ' + localStorage.getItem('tkn'),
+      'Content-Type': 'application/json'
+    },
+    signal: controller.signal,
+    body: JSON.stringify({
+      vehicleId: data.vehicleId,
+      plateNumber: data.plateNumber,
+      fleetNumber: data.fleetNumber,
+      saccoId: data.saccoId,
+      routeId: data.routeId,
+      seatingCapacity: data.seatingCapacity
+    })
+  });
+
+  let timeOutPr = timeOut(controller);
+
+  race(updateVehiclePromise, timeOutPr).then(async result => {
+    console.log(result.status);
+
+    let vehicleData = await result.json();
+
+    if (result.status == 200 || result.status == 201 || result.status == 304) {
+      console.log(vehicleData);
+    } else if (result.status == 403 || result.status == 401) {
+      signOutFunc();
+
+      displayAlert('Please login.');
+    } else {
+      displayAlert('Try and refresh your browser!');
+    }
+  }).catch(error => {
+    console.log(error);
+    displayAlert(error);
+  }).finally(() => {
+    hideLoader();
+  });
+}
+
+// get all vehicles in a sacco
+function getVehiclesInSacco(data) {
+  displayLoader('Retrieving...');
+
+  let controller = new AbortController();
+
+  let saccoVehiclesPromise = fetch(baseURL + '/vehicle', {
+    method: 'GET',
+    headers: {
+      'Authorization': 'Bearer ' + localStorage.getItem('tkn'),
+      'Content-Type': 'application/json'
+    },
+    signal: controller.signal
+  });
+
+  let timeOutPr = timeOut(controller);
+
+  race(saccoVehiclesPromise, timeOutPr).then(async result => {
+    console.log(result.status);
+
+    let vehiclesData = await result.json();
+
+    if (result.status == 200 || result.status == 201 || result.status == 304) {
+      console.log(vehiclesData);
+    } else if (result.status == 403 || result.status == 401) {
+      signOutFunc();
+
+      displayAlert('Please login.');
+    } else {
+      displayAlert('Try and refresh your browser!');
+    }
+  }).catch(error => {
+    console.log(error);
+    displayAlert(error);
+  }).finally(() => {
+    hideLoader();
+  });
+}
+
 // sign in with uname/pwd
 function createNewSacco(saccoName, saccoAddress, saccoPin, saccoContactPerson, saccoContactPersonNumber, saccoPostalAddress,
   saccoTagline, saccoCode, saccoRegion, saccoPrimaryTerminus, saccoSecondaryTerminus, saccoMaxFare, saccoPlatformFee) {
