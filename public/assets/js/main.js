@@ -516,6 +516,9 @@ function createSaccoTableRowEl(saccoData, index = 0) {
   saccoTableRow.setAttribute('id', saccoData.saccoId);
   saccoTableRow.setAttribute('class', 'pointer');
 
+  let deactivateTxt = saccoData.isActive == true ? 'Deactivate' : 'Activate';
+  let status = saccoData.isActive == true ? false : true;
+
   let saccoEl = `<th>${index + 1}</th>
                             <td>${saccoData.name}</td>
                             <td>${saccoData.address.toLowerCase()}</td>
@@ -526,7 +529,7 @@ function createSaccoTableRowEl(saccoData, index = 0) {
                                 <a class="icon p-0" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
                                 <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
                                   <li id="edit-${saccoData.saccoId}" class="events-none"><span class="dropdown-item"><i class="bi bi-pencil-square me-1 align-middle"></i> Edit</span></li>
-                                  <li id="deactivate-${saccoData.saccoId}" class="events-none"><span class="dropdown-item"><i class="bi bi-lightbulb-off me-1 align-middle"></i> Deactivate</span></li>
+                                  <li id="deactivate-${saccoData.saccoId}" data-status="${status}" class="events-none"><span class="dropdown-item"><i class="bi bi-lightbulb-off me-1 align-middle"></i> <span id="sacco-status-span">${deactivateTxt}</span></span></li>
                                   <li id="view-${saccoData.saccoId}" class="events-none"><span class="dropdown-item"><i class="bi bi-eye-fill me-1 align-middle"></i> View</span></li>
                                 </ul>
                               </div>
@@ -543,8 +546,9 @@ function createSaccoTableRowEl(saccoData, index = 0) {
 
   document.querySelector(`#deactivate-${saccoData.saccoId}`).addEventListener('click', ev => {
     let saccoId = (ev.target.id).split('-')[1];
+    let saccoStatus = ev.target.dataset.status;
 
-    searchSacco(saccoId, 1);
+    updateSaccoStatus(saccoId, saccoStatus);
   });
 
   document.querySelector(`#view-${saccoData.saccoId}`).addEventListener('click', ev => {
@@ -626,9 +630,13 @@ function updateSaccoStatus(sacco_id, status) {
     console.log(result.status);
 
     let saccoData = await result.json();
+    console.log(saccoData);
 
     if (result.status == 200 || result.status == 201 || result.status == 304) {
-      console.log(saccoData);
+      displayAlert((status == 'true' ? 'Sacco activated' : 'Sacco deactivated'));
+
+      document.querySelector(`#deactivate-${sacco_id}`).setAttribute('data-status', (status == 'true' ? false : true));
+      document.querySelector(`#sacco-status-span`).innerHTML = (status == 'true' ? 'Deactivate' : 'Activate');
     } else if (result.status == 403 || result.status == 401) {
       signOutFunc();
 
