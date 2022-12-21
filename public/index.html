@@ -531,7 +531,7 @@
                           </tr>
                         </thead>
                         <tbody id="sacco-tbody">
-                          
+
                         </tbody>
                       </table>
                     </div>
@@ -954,7 +954,7 @@
                   <label for="sacco-platform-fee-input" class="form-label">Platform Fee</label>
                   <input type="number" class="form-control" id="sacco-platform-fee-input">
                 </div>
-              </form><!-- End Multi Columns Form -->
+              </form>
 
             </div>
             <div class="modal-footer">
@@ -964,6 +964,62 @@
           </div>
         </div>
       </div><!-- Add Sacco Modal-->
+
+      <!-- Edit Sacco Modal -->
+      <div class="modal fade" id="modal-edit-sacco" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Edit sacco</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <form id="form-edit-sacco" class="row g-3">
+                <div class="col-md-6">
+                  <label for="sacco-id-edit-input" class="form-label">Sacco ID</label>
+                  <input type="text" class="form-control" id="sacco-id-edit-input" disabled>
+                </div>
+                <div class="col-md-6">
+                  <label for="sacco-name-edit-input" class="form-label">Sacco name</label>
+                  <input type="text" class="form-control" id="sacco-name-edit-input">
+                </div>
+                <div class="col-md-6">
+                  <label for="sacco-pin-edit-input" class="form-label">Sacco PIN</label>
+                  <input type="text" class="form-control" id="sacco-pin-edit-input">
+                </div>
+                <div class="col-md-6">
+                  <label for="sacco-sender-id-edit-input" class="form-label">Sender ID</label>
+                  <input type="email" class="form-control" id="sacco-sender-id-edit-input">
+                </div>
+                <div class="col-6">
+                  <label for="sacco-contact-person-edit-input" class="form-label">Contact person</label>
+                  <input type="text" class="form-control" id="sacco-contact-person-edit-input" placeholder="Contact person's name">
+                </div>
+                <div class="col-6">
+                  <label for="sacco-contact-number-edit-input" class="form-label">Contact Number</label>
+                  <input type="text" class="form-control" id="sacco-contact-number-edit-input" placeholder="Contact person's number">
+                </div>
+                <div class="col-md-12">
+                  <label for="sacco-address-edit-input" class="form-label">Address</label>
+                  <input type="text" class="form-control" id="sacco-address-edit-input" placeholder=" E.g. Mezza Office, 2nd Floor Karatina">
+                </div>
+                <div class="col-md-12">
+                  <label for="sacco-postal-address-edit-input" class="form-label">Postal Address</label>
+                  <input type="text" class="form-control" id="sacco-postal-address-edit-input" placeholder=" E.g. P.O. Box 34-00200 or P.O. Box 2399">
+                </div>
+                <div class="col-md-12">
+                  <label for="sacco-tagline-edit-input" class="form-label">Tagline</label>
+                  <input type="text" class="form-control" id="sacco-tagline-edit-input">
+                </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <button id="sacco-edit-save-btn" type="button" data-bs-dismiss="modal" class="btn btn-primary">Save changes</button>
+            </div>
+          </div>
+        </div>
+      </div><!-- Edit Sacco Modal-->
 
       <!-- Add Official Modal -->
       <div class="modal fade" id="modal-add-official" tabindex="-1">

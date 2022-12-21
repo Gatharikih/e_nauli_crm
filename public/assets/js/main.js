@@ -236,6 +236,18 @@ let mainSearchBtn = document.getElementById('main-search-btn');
 
 let saccoTbody = document.getElementById('sacco-tbody');
 
+let sacco_EditIdInput = document.getElementById('sacco-id-edit-input');
+let sacco_EditNameInput = document.getElementById('sacco-name-edit-input');
+let sacco_EditPinInput = document.getElementById('sacco-pin-edit-input');
+let sacco_EditSenderIdInput = document.getElementById('sacco-sender-id-edit-input');
+let sacco_EditContactPersonInput = document.getElementById('sacco-contact-person-edit-input');
+let sacco_EditContactNumberInput = document.getElementById('sacco-contact-number-edit-input');
+let sacco_EditAddressInput = document.getElementById('sacco-address-edit-input');
+let sacco_EditPostalAddressInput = document.getElementById('sacco-postal-address-edit-input');
+let sacco_EditTaglineInput = document.getElementById('sacco-tagline-edit-input');
+
+let sacco_EditSaveBtn = document.getElementById('sacco-edit-save-btn');
+
 let baseURL = 'http://localhost:9000';
 
 let contextFlag = 'dashboard';
@@ -421,10 +433,29 @@ dropdownSignout.addEventListener('click', () => {
 
 /* END PROFILE DROPDOWN */
 
+
+sacco_EditSaveBtn.addEventListener('click', () => {
+  let data = {
+    saccoId: sacco_EditIdInput.value.trim(),
+    pin: sacco_EditPinInput.value.trim(),
+    senderId: sacco_EditSenderIdInput.value.trim(),
+    name: sacco_EditNameInput.value.trim(),
+    address: sacco_EditAddressInput.value.trim(),
+    contactPerson: sacco_EditContactPersonInput.value.trim(),
+    contactNumber: sacco_EditContactNumberInput.value.trim(),
+    postalAddress: sacco_EditPostalAddressInput.value.trim(),
+    tagline: sacco_EditTaglineInput.value.trim()
+  }
+
+  updateSaccoDetails(data);
+});
+
 function displayAlert(msg) {
   toastBody.innerHTML = msg;
 
-  let toast = new bootstrap.Toast(alertDiv)
+  let toast = new bootstrap.Toast(alertDiv, {
+    delay: 8000
+  })
 
   toast.show()
 }
@@ -528,7 +559,7 @@ function createSaccoTableRowEl(saccoData, index = 0) {
                               <div class="filter position-relative top-0">
                                 <a class="icon p-0" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
                                 <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                                  <li id="edit-${saccoData.saccoId}" class="events-none"><span class="dropdown-item"><i class="bi bi-pencil-square me-1 align-middle"></i> Edit</span></li>
+                                  <li id="edit-${saccoData.saccoId}" class="events-none" data-bs-toggle="modal" data-bs-target="#modal-edit-sacco"><span class="dropdown-item"><i class="bi bi-pencil-square me-1 align-middle"></i> Edit</span></li>
                                   <li id="deactivate-${saccoData.saccoId}" data-status="${status}" class="events-none"><span class="dropdown-item"><i class="bi bi-lightbulb-off me-1 align-middle"></i> <span id="sacco-status-span">${deactivateTxt}</span></span></li>
                                   <li id="view-${saccoData.saccoId}" class="events-none"><span class="dropdown-item"><i class="bi bi-eye-fill me-1 align-middle"></i> View</span></li>
                                 </ul>
@@ -587,13 +618,35 @@ function searchSacco(sacco_id, flag = 0) {
       if (flag == 0) {
         createSaccoTableRowEl(saccoData);
       } else {
-        // TODO:
+        sacco_EditIdInput.value = saccoData.saccoId;
+        sacco_EditPinInput.value = saccoData.pin;
+        sacco_EditSenderIdInput.value = saccoData.senderId;
+        sacco_EditNameInput.value = saccoData.name;
+        sacco_EditAddressInput.value = saccoData.address;
+        sacco_EditContactPersonInput.value = saccoData.contactPerson;
+        sacco_EditContactNumberInput.value = saccoData.contactNumber;
+        sacco_EditPostalAddressInput.value = saccoData.postalAddress;
+        sacco_EditTaglineInput.value = saccoData.tagline;
       }
 
     } else if (result.status == 403 || result.status == 401) {
       signOutFunc();
 
       displayAlert('Please login.');
+    } else if (result.status == 404) {
+      displayAlert(saccoData.message);
+
+      while (saccoTbody.firstChild) {
+        saccoTbody.removeChild(saccoTbody.firstChild);
+      }
+
+      let saccoTableRow = document.createElement('tr');
+      saccoTableRow.setAttribute('class', 'text-center');
+
+      let saccoEl = `<th colspan="6"><h5>${saccoData.message}</h5></th>`;
+
+      saccoTableRow.innerHTML = saccoEl;
+      saccoTbody.appendChild(saccoTableRow);
     } else {
       displayAlert('Try and refresh your browser!');
     }
@@ -691,6 +744,8 @@ function updateSaccoDetails(data) {
       signOutFunc();
 
       displayAlert('Please login.');
+    } else if (result.status == 410) {
+      displayAlert('We experienced a problem while processing your request. Try again later.');
     } else {
       displayAlert('Try and refresh your browser!');
     }
