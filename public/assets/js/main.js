@@ -189,6 +189,8 @@ let dropdownSignout = document.getElementById('dropdown-signout');
 
 let contentSaccoDiv = document.getElementById('sacco-content-div');
 let saccoDiv = document.getElementById('sacco-div');
+let singleSaccoTableCol = document.getElementById('single-sacco-table-col');
+let singleSaccoRecordCol = document.getElementById('single-sacco-record-col');
 let contentOfficialDiv = document.getElementById('official-content-div');
 let officialDiv = document.getElementById('official-div');
 let contentStationDiv = document.getElementById('station-content-div');
@@ -341,6 +343,9 @@ navSaccoMgt.addEventListener('click', () => {
 
   navClick(navSaccoMgt);
   displaySection(sectionSaccoMgt);
+
+  singleSaccoTableCol.classList.remove('d-none');
+  singleSaccoRecordCol.classList.add('d-none');
 
   menuSaccoMgt.classList.remove('d-none');
   contentSaccoMgt.classList.add('d-none');
@@ -572,7 +577,7 @@ function createSaccoTableRowEl(saccoData, index = 0) {
   document.querySelector(`#edit-${saccoData.saccoId}`).addEventListener('click', ev => {
     let saccoId = (ev.target.id).split('-')[1];
 
-    searchSacco(saccoId, 1);
+    searchSacco(saccoId, 0);
   });
 
   document.querySelector(`#deactivate-${saccoData.saccoId}`).addEventListener('click', ev => {
@@ -585,12 +590,12 @@ function createSaccoTableRowEl(saccoData, index = 0) {
   document.querySelector(`#view-${saccoData.saccoId}`).addEventListener('click', ev => {
     let saccoId = (ev.target.id).split('-')[1];
 
-    searchSacco(saccoId, 1);
+    searchSacco(saccoId, 2);
   });
 }
 
 // search sacco
-function searchSacco(sacco_id, flag = 0) {
+function searchSacco(sacco_id, flag) {
   displayLoader('Searching...');
 
   let controller = new AbortController();
@@ -615,18 +620,47 @@ function searchSacco(sacco_id, flag = 0) {
     if (result.status == 200 || result.status == 201 || result.status == 304) {
       console.log(saccoData);
 
-      if (flag == 0) {
-        createSaccoTableRowEl(saccoData);
-      } else {
-        sacco_EditIdInput.value = saccoData.saccoId;
-        sacco_EditPinInput.value = saccoData.pin;
-        sacco_EditSenderIdInput.value = saccoData.senderId;
-        sacco_EditNameInput.value = saccoData.name;
-        sacco_EditAddressInput.value = saccoData.address;
-        sacco_EditContactPersonInput.value = saccoData.contactPerson;
-        sacco_EditContactNumberInput.value = saccoData.contactNumber;
-        sacco_EditPostalAddressInput.value = saccoData.postalAddress;
-        sacco_EditTaglineInput.value = saccoData.tagline;
+      switch (flag) {
+        case 0:
+          // create sacco table row
+          createSaccoTableRowEl(saccoData);
+
+          singleSaccoTableCol.classList.remove('d-none');
+          singleSaccoRecordCol.classList.add('d-none');
+          break;
+
+        case 1:
+          // display sacco edit modal
+          sacco_EditIdInput.value = saccoData.saccoId;
+          sacco_EditPinInput.value = saccoData.pin;
+          sacco_EditSenderIdInput.value = saccoData.senderId;
+          sacco_EditNameInput.value = saccoData.name;
+          sacco_EditAddressInput.value = saccoData.address;
+          sacco_EditContactPersonInput.value = saccoData.contactPerson;
+          sacco_EditContactNumberInput.value = saccoData.contactNumber;
+          sacco_EditPostalAddressInput.value = saccoData.postalAddress;
+          sacco_EditTaglineInput.value = saccoData.tagline;
+          break;
+
+        case 2:
+          // display full sacco record
+          document.getElementById('sacco-id-span').innerHTML = saccoData.saccoId;
+          document.getElementById('sacco-name-span').innerHTML = saccoData.name;
+          document.getElementById('sacco-address-span').innerHTML = saccoData.address;
+          document.getElementById('sacco-pin-span').innerHTML = saccoData.pin;
+          document.getElementById('sacco-contact-person-span').innerHTML = saccoData.contactPerson;
+          document.getElementById('sacco-contact-number-span').innerHTML = saccoData.contactNumber;
+          document.getElementById('sacco-status-span').innerHTML = (saccoData.isActive == true ? 'Active' : 'Inactive');
+          document.getElementById('sacco-postal-address-span').innerHTML = saccoData.postalAddress;
+          document.getElementById('sacco-sender-id-span').innerHTML = saccoData.senderId;
+          document.getElementById('sacco-tagline-span').innerHTML = saccoData.tagline;
+
+          singleSaccoTableCol.classList.add('d-none');
+          singleSaccoRecordCol.classList.remove('d-none');
+          break;
+
+        default:
+          break;
       }
 
     } else if (result.status == 403 || result.status == 401) {

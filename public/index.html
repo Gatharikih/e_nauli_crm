@@ -507,37 +507,72 @@
         <div id="content-sacco-mgt" class="row d-none">
           <div class="col-12">
             <div id="sacco-content-div">
-              <div class="row my-3">
-                <div class="col-12">
-                  <button type="button" class="btn btn-outline-primary float-end me-5" data-bs-toggle="modal" data-bs-target="#modal-add-sacco"><i class="bi bi-plus-circle-dotted me-1"></i> Add sacco</button>
-                  <button id="get-all-saccos-btn" type="button" class="btn btn-outline-primary float-end me-5 d-none"><i class="bi bi-list-nested me-1"></i> Get all saccos</button>
-                </div>
-              </div>
 
               <div id="sacco-div" class="row mt-2 mb-3">
-                <!-- Single Sacco -->
-                <div class="col-12">
-                  <div class="card">
-                    <div class="card-body py-4">
-                      <table class="table table-hover">
-                        <thead>
-                          <tr>
-                            <th>#</th>
-                            <th>Name</th>
-                            <th>Address</th>
-                            <th>Contact Person</th>
-                            <th>Sacco ID</th>
-                            <th></th>
-                          </tr>
-                        </thead>
-                        <tbody id="sacco-tbody">
 
-                        </tbody>
-                      </table>
+                <!-- Single Sacco Table -->
+                <div id="single-sacco-table-col" class="col-12">
+                  <div class="row">
+                    <div class="col-12 mb-3">
+                      <button type="button" class="btn btn-outline-primary float-end me-5" data-bs-toggle="modal" data-bs-target="#modal-add-sacco"><i class="bi bi-plus-circle-dotted me-1"></i> Add sacco</button>
+                      <button id="get-all-saccos-btn" type="button" class="btn btn-outline-primary float-end me-5 d-none"><i class="bi bi-list-nested me-1"></i> Get all saccos</button>
                     </div>
 
+                    <div class="col-12">
+                      <div class="card">
+                        <div class="card-body py-4">
+                          <table class="table table-hover">
+                            <thead>
+                              <tr>
+                                <th>#</th>
+                                <th>Name</th>
+                                <th>Address</th>
+                                <th>Contact Person</th>
+                                <th>Sacco ID</th>
+                                <th></th>
+                              </tr>
+                            </thead>
+                            <tbody id="sacco-tbody">
+
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                </div><!-- End Single Sacco -->
+                </div><!-- End Single Sacco Table -->
+
+                <!-- Single Sacco Record -->
+                <div id="single-sacco-record-col" class="col-12 d-none">
+                  <div class="row">
+                    <div class="col-12 mb-3">
+                      <button type="button" class="btn btn-outline-primary float-end me-5" data-bs-toggle="modal" data-bs-target="#modal-add-vehicle"><i class="bi bi-node-plus me-1"></i> Add Vehicle</button>
+                    </div>
+                    <div class="col-12">
+                      <div class="card">
+                        <div class="card-body py-4">
+                          <div class="row">
+                            <div class="col-md-5 col-sm-12 border-end sacco-details-divider me-5">
+                              <p><strong class="me-2">Sacco ID: </strong><span id="sacco-id-span">Sacco ID</span></p>
+                              <p><strong class="me-2">Sacco name: </strong><span id="sacco-name-span">Name</span></p>
+                              <p><strong class="me-2">PIN: </strong><span id="sacco-pin-span">PIN</span></p>
+                              <p><strong class="me-2">Contact person: </strong><span id="sacco-contact-person-span">Contact person</span></p>
+                              <p><strong class="me-2">Contact number: </strong><span id="sacco-contact-number-span">Contact number</span></p>
+                            </div>
+                            <div class="col-md-5 col-sm-12">
+                              <p><strong class="me-2">Status: </strong><span id="sacco-status-span">Active</span></p>
+                              <p><strong class="me-2">Address: </strong><span id="sacco-address-span">Address</span></p>
+                              <p><strong class="me-2">Postal address: </strong><span id="sacco-postal-address-span">Postal Address</span></p>
+                              <p><strong class="me-2">Tagline: </strong><span id="sacco-tagline-span">Tagline</span></p>
+                              <p><strong class="me-2">Sender ID: </strong><span id="sacco-sender-id-span">Sender ID</span></p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- End Single Sacco Record -->
               </div>
             </div>
 
@@ -1093,7 +1128,7 @@
         <div class="modal-dialog modal-lg">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title">Add official</h5>
+              <h5 class="modal-title">Add vehicle</h5>
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">

@@ -17,6 +17,10 @@
   opacity: 0.6 !important;
 }
 
+.sacco-details-divider {
+  box-shadow: 20px 0px 10px rgba(0, 0, 0, 0.02) !important;
+}
+
 .page-loading {
   position: fixed;
   top: 0;
