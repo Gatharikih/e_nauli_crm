@@ -632,7 +632,7 @@ function searchSacco(sacco_id, flag = 0) {
     } else if (result.status == 403 || result.status == 401) {
       signOutFunc();
 
-      displayAlert('Please login.');
+      displayAlert(saccoData.message || 'Please login.');
     } else if (result.status == 404) {
       displayAlert(saccoData.message);
 
@@ -648,7 +648,7 @@ function searchSacco(sacco_id, flag = 0) {
       saccoTableRow.innerHTML = saccoEl;
       saccoTbody.appendChild(saccoTableRow);
     } else {
-      displayAlert('Try and refresh your browser!');
+      displayAlert(saccoData.message || 'Try and refresh your browser!');
     }
   }).catch(error => {
     console.log(error);
@@ -740,14 +740,16 @@ function updateSaccoDetails(data) {
 
     if (result.status == 200 || result.status == 201 || result.status == 304) {
       console.log(saccoData);
+
+      displayAlert('Update successful.');
     } else if (result.status == 403 || result.status == 401) {
       signOutFunc();
 
-      displayAlert('Please login.');
+      displayAlert(saccoData.message || 'Please login.');
     } else if (result.status == 410) {
-      displayAlert('We experienced a problem while processing your request. Try again later.');
+      displayAlert(saccoData.message || 'We experienced a problem while processing your request. Try again later.');
     } else {
-      displayAlert('Try and refresh your browser!');
+      displayAlert(saccoData.message || 'Try and refresh your browser!');
     }
   }).catch(error => {
     console.log(error);
@@ -1058,8 +1060,10 @@ function createOfficial(officialSaccoId, officialSaccoMsidn, officialSaccoDesign
 }
 
 function signOutFunc() {
-  loginPage.classList.remove('d-none');
-  adminDashboard.classList.add('d-none');
+  // window.location.reload();
+
+  // loginPage.classList.remove('d-none');
+  // adminDashboard.classList.add('d-none');
 }
 
 function fleetMenuClick(crumb) {
