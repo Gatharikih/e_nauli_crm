@@ -249,10 +249,12 @@ let sacco_EditPostalAddressInput = document.getElementById('sacco-postal-address
 let sacco_EditTaglineInput = document.getElementById('sacco-tagline-edit-input');
 
 let sacco_EditSaveBtn = document.getElementById('sacco-edit-save-btn');
+let getSaccoVehiclesBtn = document.getElementById('get-this-sacco-vehicles');
 
 let baseURL = 'http://localhost:9000';
 
 let contextFlag = 'dashboard';
+let selectedSacco = null;
 
 window.onload = () => {
   setTimeout(() => {
@@ -262,6 +264,12 @@ window.onload = () => {
 
   navClick(navDashboard);
 }
+
+getSaccoVehiclesBtn.addEventListener('click', () => {
+  if (selectedSacco) {
+    getVehiclesInSacco(selectedSacco);
+  }
+});
 
 mainSearchBtn.addEventListener('click', () => {
   let searchTerm = mainSearchInput.value.trim();
@@ -577,7 +585,7 @@ function createSaccoTableRowEl(saccoData, index = 0) {
   document.querySelector(`#edit-${saccoData.saccoId}`).addEventListener('click', ev => {
     let saccoId = (ev.target.id).split('-')[1];
 
-    searchSacco(saccoId, 0);
+    searchSacco(saccoId, 1);
   });
 
   document.querySelector(`#deactivate-${saccoData.saccoId}`).addEventListener('click', ev => {
@@ -619,6 +627,8 @@ function searchSacco(sacco_id, flag) {
 
     if (result.status == 200 || result.status == 201 || result.status == 304) {
       console.log(saccoData);
+
+      selectedSacco = saccoData.saccoId;
 
       switch (flag) {
         case 0:
@@ -666,7 +676,7 @@ function searchSacco(sacco_id, flag) {
     } else if (result.status == 403 || result.status == 401) {
       signOutFunc();
 
-      displayAlert(saccoData.message || 'Please login.');
+      displayAlert((saccoData?.message || 'Unauthorized') + '. Please login.');
     } else if (result.status == 404) {
       displayAlert(saccoData.message);
 
@@ -727,7 +737,7 @@ function updateSaccoStatus(sacco_id, status) {
     } else if (result.status == 403 || result.status == 401) {
       signOutFunc();
 
-      displayAlert('Please login.');
+      displayAlert((saccoData?.message || 'Unauthorized') + '. Please login.');
     } else {
       displayAlert('Try and refresh your browser!');
     }
@@ -779,7 +789,7 @@ function updateSaccoDetails(data) {
     } else if (result.status == 403 || result.status == 401) {
       signOutFunc();
 
-      displayAlert(saccoData.message || 'Please login.');
+      displayAlert((saccoData?.message || 'Unauthorized') + '. Please login.');
     } else if (result.status == 410) {
       displayAlert(saccoData.message || 'We experienced a problem while processing your request. Try again later.');
     } else {
@@ -826,7 +836,7 @@ function addVehicleToSacco(data) {
     } else if (result.status == 403 || result.status == 401) {
       signOutFunc();
 
-      displayAlert('Please login.');
+      displayAlert((saccoData?.message || 'Unauthorized') + '. Please login.');
     } else {
       displayAlert('Try and refresh your browser!');
     }
@@ -873,7 +883,7 @@ function updateVehicleToSacco(data) {
     } else if (result.status == 403 || result.status == 401) {
       signOutFunc();
 
-      displayAlert('Please login.');
+      displayAlert((saccoData?.message || 'Unauthorized') + '. Please login.');
     } else {
       displayAlert('Try and refresh your browser!');
     }
@@ -886,12 +896,12 @@ function updateVehicleToSacco(data) {
 }
 
 // get all vehicles in a sacco
-function getVehiclesInSacco(data) {
+function getVehiclesInSacco(selectedSaccoId) {
   displayLoader('Retrieving...');
 
   let controller = new AbortController();
 
-  let saccoVehiclesPromise = fetch(baseURL + '/vehicle', {
+  let saccoVehiclesPromise = fetch(baseURL + '/sacco/' + selectedSaccoId +'/vehicles', {
     method: 'GET',
     headers: {
       'Authorization': 'Bearer ' + localStorage.getItem('tkn'),
@@ -912,7 +922,7 @@ function getVehiclesInSacco(data) {
     } else if (result.status == 403 || result.status == 401) {
       signOutFunc();
 
-      displayAlert('Please login.');
+      displayAlert((saccoData?.message || 'Unauthorized') + '. Please login.');
     } else {
       displayAlert('Try and refresh your browser!');
     }
@@ -976,7 +986,7 @@ function createNewSacco(saccoName, saccoAddress, saccoPin, saccoContactPerson, s
     } else if (result.status == 403 || result.status == 401) {
       signOutFunc();
 
-      displayAlert('Please login.');
+      displayAlert((saccoData?.message || 'Unauthorized') + '. Please login.');
     } else {
       displayAlert('Try and refresh your browser!');
     }
@@ -1024,7 +1034,7 @@ function loginWithPhoneAndPwd(phone, pwd) {
       adminDashboard.classList.remove('d-none');
     } else if (result.status == 403 || result.status == 401) {
       signOutFunc();
-      displayAlert('Please login.');
+      displayAlert((saccoData?.message || 'Unauthorized') + '. Please login.');
     } else if (result.status == 500) {
       signOutFunc();
       displayAlert("We encountered a problem on our end. We're working to resolve it.");
@@ -1081,7 +1091,7 @@ function createOfficial(officialSaccoId, officialSaccoMsidn, officialSaccoDesign
 
       bootstrap.Modal.getOrCreateInstance(modalAddOfficial).hide();
 
-      displayAlert('Please login.');
+      displayAlert((saccoData?.message || 'Unauthorized') + '. Please login.');
     } else {
       displayAlert(response || 'Try and refresh your browser!');
     }

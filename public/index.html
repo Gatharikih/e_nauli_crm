@@ -50,7 +50,7 @@
     </div>
   </div>
 
-  <div id="login-page" class="d-none">
+  <div id="login-page" class="">
     <section class="section register min-vh-100 d-flex flex-column align-items-center justify-content-center pt-0 pb-4">
       <div class="container">
         <div class="row justify-content-center">
@@ -108,7 +108,7 @@
 
   </div>
 
-  <div id="admin-dashboard" class="">
+  <div id="admin-dashboard" class="d-none">
     <!-- ======= Header ======= -->
     <header id="header" class="header fixed-top d-flex align-items-center">
 
@@ -546,7 +546,11 @@
                 <div id="single-sacco-record-col" class="col-12 d-none">
                   <div class="row">
                     <div class="col-12 mb-3">
-                      <button type="button" class="btn btn-outline-primary float-end me-5" data-bs-toggle="modal" data-bs-target="#modal-add-vehicle"><i class="bi bi-node-plus me-1"></i> Add Vehicle</button>
+                      <div class="btn-group  float-end " role="group">
+                        <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#modal-add-vehicle"><i class="bi bi-node-plus me-1"></i> Add Vehicle</button>
+                        <button id="get-this-sacco-vehicles" type="button" class="btn btn-outline-primary"><i class="bi bi-text-center me-1"></i> Get vehicles</button>
+                      </div>
+
                     </div>
                     <div class="col-12">
                       <div class="card">
@@ -1016,15 +1020,15 @@
                 </div>
                 <div class="col-md-6">
                   <label for="sacco-name-edit-input" class="form-label">Sacco name</label>
-                  <input type="text" class="form-control" id="sacco-name-edit-input">
+                  <input type="text" class="form-control" id="sacco-name-edit-input" placeholder="Name of the sacco">
                 </div>
                 <div class="col-md-6">
                   <label for="sacco-pin-edit-input" class="form-label">Sacco PIN</label>
-                  <input type="text" class="form-control" id="sacco-pin-edit-input">
+                  <input type="text" class="form-control" id="sacco-pin-edit-input" placeholder="Sacco PIN">
                 </div>
                 <div class="col-md-6">
                   <label for="sacco-sender-id-edit-input" class="form-label">Sender ID</label>
-                  <input type="email" class="form-control" id="sacco-sender-id-edit-input">
+                  <input type="email" class="form-control" id="sacco-sender-id-edit-input" placeholder="Sacco's sender ID">
                 </div>
                 <div class="col-6">
                   <label for="sacco-contact-person-edit-input" class="form-label">Contact person</label>
@@ -1044,7 +1048,7 @@
                 </div>
                 <div class="col-md-12">
                   <label for="sacco-tagline-edit-input" class="form-label">Tagline</label>
-                  <input type="text" class="form-control" id="sacco-tagline-edit-input">
+                  <input type="text" class="form-control" id="sacco-tagline-edit-input" placeholder="The sacco's tagline">
                 </div>
               </form>
             </div>
