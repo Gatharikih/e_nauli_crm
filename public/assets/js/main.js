@@ -1026,9 +1026,10 @@ function loginWithPhoneAndPwd(phone, pwd) {
       // user accepted, save session
       let userDetails = await result.json();
 
-      console.log(userDetails);
+      console.log(userDetails.message);
+      // console.log(userDetails.message.accessToken);
 
-      localStorage.setItem('tkn', userDetails.accessToken);
+      localStorage.setItem('tkn', userDetails.message.accessToken);
 
       loginPage.classList.add('d-none');
       adminDashboard.classList.remove('d-none');
